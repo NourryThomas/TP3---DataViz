@@ -1,0 +1,7 @@
+# Ne pas autoriser l'acces au fichier .htaccess
+<Files .htaccess>
+Order allow,deny
+Deny from all
+</Files>
+# Empêcher la visualisation de l'arborescence 
+Options -Indexes
