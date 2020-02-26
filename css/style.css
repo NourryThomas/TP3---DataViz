@@ -1,0 +1,4 @@
+.div_filtres {
+  flex-direction: :row;
+  display: flex;
+}
