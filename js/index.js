@@ -1,4 +1,6 @@
 var data = [];
+var stations = [];
+var stationsName = [];
 const width = 550, height = 550;
 
 function createMap() {
@@ -61,9 +63,6 @@ function loadJson(d){
 function loadVilles() {
 
   // On retraite les données pour ne récupérer que les villes
-
-    var stations = [];
-    var stationsName = [];
 
     for(var i = 0; i < data.length; i++)
     {
