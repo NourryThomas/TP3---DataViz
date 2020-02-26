@@ -1,4 +1,9 @@
 .div_filtres {
-  flex-direction: :row;
+  flex-direction: row;
   display: flex;
+  justify-content: center;
+}
+
+.center_txt {
+  text-align: center;
 }
