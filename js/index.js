@@ -91,7 +91,7 @@ function loadVilles() {
 
     for(var i = 0; i < stationsName.length; i++)
     {
-      var o = new Option(stationsName[i], i);
+      var o = new Option(stationsName[i], "ville_" + i);
       $(o).html(stationsName[i]);
       $("#select_ville").append(o);
     }
