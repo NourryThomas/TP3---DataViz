@@ -14,13 +14,16 @@
 </HEAD>
 <body>
   <h1 class="center_txt">Météo de la France en Février 1999</h1>
+  <br>
   <div id="filtres" class="div_filtres">
-    <input id="datepicker" type="text" onchange='updateVilles();'>
-    <select id="select_ville" onchange="createVilles();"></select>
+    <input style="margin-right: 5%;" id="datepicker" onchange='updateVilles();' placeholder="Sélectionner une date" type="text">
+    <select id="select_ville" onchange="createVilles();">
+      <option value="" selected>Selectionner la ville</option>
+    </select>
   </div>
   <div id="map">
   </div>
-  <div id="test">
+  <div id="line_chart">
   </div>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
