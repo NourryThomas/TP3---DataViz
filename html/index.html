@@ -9,12 +9,13 @@
 <meta name="author" content="">
 <link href="../css/style.css" rel="stylesheet">
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-<link rel="stylesheet" type="text/css" href="../js/datetimepicker/build/jquery.datetimepicker.min.css"/ >
 <TITLE> Météo - DataViz </TITLE>
 </HEAD>
 <body>
+  <h1 class="center_txt">Météo de la France en Février 1999</h1>
   <div id="filtres" class="div_filtres">
-    <input id="datetimepicker" type="text">
+    <input id="datepicker">
+    <input id="ville">
   </div>
   <div id="map">
   </div>
@@ -23,26 +24,9 @@
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="../js/index.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-<script src="../js/datetimepicker/build/jquery.datetimepicker.full.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-  jQuery.datetimepicker.setLocale('fr');
-  $('#datetimepicker').datetimepicker({
-    format:'d/m/Y H:i',
-    minDate:'1999/02/01',
-    maxDate:'1999/02/28',
-    startDate:'1999/02/01',
-    todayButton:false,
-    scrollMonth:false,
-    dayOfWeekStart:1,
-    onGenerate:function(ct,$i) {
-      $('.xdsoft_prev').css("display","none");
-      $('.xdsoft_next').css("display","none");
-      $('i').remove();
-      $('div.xdsoft_select.xdsoft_monthselect.xdsoft_scroller_box').remove();
-      $('div.xdsoft_select.xdsoft_yearselect.xdsoft_scroller_box').remove();
-    }
-  });
+  $( "#datepicker" ).datepicker();
 });
 </script>
 </body>

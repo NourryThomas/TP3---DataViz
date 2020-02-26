@@ -14,4 +14,17 @@ div.tooltip {
 
 .department {
     fill:green;
+<<<<<<< HEAD
+=======
+}
+
+.div_filtres {
+  flex-direction: row;
+  display: flex;
+  justify-content: center;
+}
+
+.center_txt {
+  text-align: center;
+>>>>>>> 74728cee0d305a7ec9eb9c9e1ca0709da719f595
 }
