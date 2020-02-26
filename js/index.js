@@ -61,20 +61,31 @@ function loadJson(d){
 function loadVilles() {
 
   // On retraite les données pour ne récupérer que les villes
-    var maxVilles = 0;
-    var idMaxVilles = 0;
+
+    var stations = [];
+    var stationsName = [];
 
     for(var i = 0; i < data.length; i++)
     {
-      if(data[i]['station'].length > maxVilles){
-        maxVilles = data[i]['station'].length;
-        idMaxVilles = i;
-      }
-    }
+      for(var j = 0; j < data[i]['station'].length; j++)
+      {
+        if(!stationsName.includes(data[i]['station'][j]['n']))
+        {
+          stationsName.push(data[i]['station'][j]['n']);
 
-    for(var i = 0; i < data[idMaxVilles]['station'].length; i ++)
-    {
-      console.log(data[idMaxVilles]['station'][i]['n']);
+          var nom = data[i]['station'][j]['n'];
+          var latitude = data[i]['station'][j]['lat'];
+          var longitude = data[i]['station'][j]['lng'];
+
+          var infoStation = {
+    					nom: nom,
+              latitude: latitude,
+              longitude : longitude
+    				};
+
+          stations.push(infoStation);
+        }
+      }
     }
 
     d3.select("#map")
@@ -82,11 +93,11 @@ function loadVilles() {
     .attr("width", width)
     .attr("height", height)
     .selectAll("villes")
-  	.data(data)
+  	.data(dataStation)
   	.join("villes")
   	.attr("cy", 60)
-  	.attr("cx", (data, idx) => {
-      //console.log(data.station.length);
+  	.attr("cx", (data) => {
+      console.log(data.nom + ' : ' + data.latitude);
   	})
   	.attr("r", data => {
   		return Math.sqrt(1);
