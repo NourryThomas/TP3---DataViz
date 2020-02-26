@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 div.tooltip {
     position: absolute;
     text-align: center;
@@ -14,4 +15,9 @@ div.tooltip {
 
 .department {
     fill:green;
+=======
+.div_filtres {
+  flex-direction: :row;
+  display: flex;
+>>>>>>> f3d1e625af126e2eecbf6ab76ae4fa39d088f5ea
 }
