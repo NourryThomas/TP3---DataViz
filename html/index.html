@@ -15,8 +15,8 @@
 <body>
   <h1 class="center_txt">Météo de la France en Février 1999</h1>
   <div id="filtres" class="div_filtres">
-    <input id="datepicker" type="text">
-    <select id="select_ville"></select>
+    <input id="datepicker" type="text" onchange='updateVilles();'>
+    <select id="select_ville" onchange="createVilles();"></select>
   </div>
   <div id="map">
   </div>
