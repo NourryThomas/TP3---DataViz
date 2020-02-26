@@ -61,7 +61,6 @@ function loadJson(d){
 function loadVilles() {
 
   // On retraite les données pour ne récupérer que les villes
-
     var stations = [];
     var stationsName = [];
 
@@ -92,16 +91,17 @@ function loadVilles() {
     .append("svg")
     .attr("width", width)
     .attr("height", height)
-    .selectAll("villes")
-  	.data(dataStation)
-  	.join("villes")
-  	.attr("cy", 60)
-  	.attr("cx", (data) => {
-      console.log(data.nom + ' : ' + data.latitude);
+    .selectAll("circle")
+  	.data(stations)
+  	.join("circle")
+  	.attr("cy", (data, idx) => {
+      return data.latitude * 2.454071;
+  	})
+  	.attr("cx", (data, idx) => {
+      return data.longitude * 46.279229;
   	})
   	.attr("r", data => {
-  		return Math.sqrt(1);
+  		return Math.sqrt(25);
   	})
-  	.attr("id", (data, idx) => idx)
   	.attr("fill", "magenta");
 }
