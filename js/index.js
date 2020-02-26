@@ -1,6 +1,4 @@
 var data = [];
-var stations = [];
-var stationsName = [];
 const width = 550, height = 550;
 
 function createMap() {
@@ -63,6 +61,8 @@ function loadJson(d){
 function loadVilles() {
 
   // On retraite les données pour ne récupérer que les villes
+  var stations = [];
+  var stationsName = [];
 
     for(var i = 0; i < data.length; i++)
     {
@@ -85,6 +85,15 @@ function loadVilles() {
           stations.push(infoStation);
         }
       }
+    }
+
+    stationsName.sort();
+    
+    for(var i = 0; i < stationsName.length; i++)
+    {
+      var o = new Option(stationsName[i], i);
+      $(o).html(stationsName[i]);
+      $("#select_ville").append(o);
     }
 
     d3.select("#map")
