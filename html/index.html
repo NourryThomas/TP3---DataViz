@@ -8,13 +8,15 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link href="../css/style.css" rel="stylesheet">
+<link href="../css/jquery-ui.css" rel="stylesheet">
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <TITLE> Météo - DataViz </TITLE>
 </HEAD>
 <body>
   <h1 class="center_txt">Météo de la France en Février 1999</h1>
   <div id="filtres" class="div_filtres">
-    <input id="datepicker">
+    <input id="datepicker" type="text">
+    <input id="ville">
   </div>
   <div id="map">
   </div>
@@ -23,9 +25,32 @@
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="../js/index.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.2/i18n/jquery.ui.datepicker-fr.min.js" integrity="sha256-GTdh3lyvmxWbBFI8c44EyxD2yOJwx/O6hKcDJHzmHuQ=" crossorigin="anonymous"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-  
+
+  $( "#datepicker" ).datepicker( $.datepicker.regional[ "fr" ] );
+  $( "#datepicker" ).datepicker({
+    minDate: new Date(2007, 1 - 1, 1),
+    maxDate: new Date(2007, 1 - 1, 1)
+  });
+
+  // On retraite les données pour ne récupérer que les villes
+  var maxVilles = 0;
+  var idMaxVilles = 0;
+
+  for(var i = 0; i < data.length; i++)
+  {
+    if(data[i]['station'].length > maxVilles){
+      maxVilles = data[i]['station'].length;
+      idMaxVilles = i;
+    }
+  }
+
+  for(var i = 0; i < data[idMaxVilles]['station'].length; i ++)
+  {
+    console.log(data[idMaxVilles]['station'][i]['n']);
+  }
 });
 </script>
 </body>
