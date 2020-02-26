@@ -16,7 +16,7 @@ function createMap {
 
   const deps = svg.append("g");
 
-  d3.json('json//departments.json').then(function(geojson) {
+  d3.json('json/france-geojson-master/departments.geojson').then(function(geojson) {
       deps.selectAll("path")
           .data(geojson.features)
           .enter()
