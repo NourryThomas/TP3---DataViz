@@ -146,7 +146,6 @@ function updateVilles()
   })
 
   d3.selectAll("#map svg text").text(function(d){
-    console.log('test');
     try {
       if(d.detailJour.length > day - 1)
       {
