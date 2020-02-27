@@ -41,6 +41,32 @@ div.tooltip {
     shape-rendering: crispEdges;
 }
 
+.overlay {
+    fill: none;
+    pointer-events: all;
+}
+
+.focus .circle_pluvio {
+    fill: steelblue;
+}
+
+.focus .circle_temp {
+    fill: red;
+}
+
+.focus text {
+    font-size: 14px;
+}
+
+.tooltip_graph {
+    fill: white;
+    stroke: #000;
+}
+
+.tooltip-date, .tooltip-pluvio, .tooltip-temp {
+    font-weight: bold;
+}
+
 #map{
   width:50%
 }
@@ -107,32 +133,4 @@ div.tooltip {
     resize: vertical;
     font: 2vw sans-serif;
   }
-}
-
-.line {
-    fill: none;
-    stroke: steelblue;
-    stroke-width: 1.5px;
-}
-
-.overlay {
-    fill: none;
-    pointer-events: all;
-}
-
-.focus circle {
-    fill: steelblue;
-}
-
-.focus text {
-    font-size: 14px;
-}
-
-.tooltip {
-    fill: white;
-    stroke: #000;
-}
-
-.tooltip-date, .tooltip-likes {
-    font-weight: bold;
 }
