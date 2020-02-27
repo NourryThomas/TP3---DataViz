@@ -335,7 +335,7 @@ function createLineChart(data) {
       .attr("dy", "1em")
       .style("text-anchor", "middle")
       .style('fill', 'steelblue')
-      .text("Pluviométrie");
+      .text("Pluviométrie (mm)");
 
   svg.append("g")
       .attr("class", "y axis")
@@ -352,7 +352,7 @@ function createLineChart(data) {
       .attr("dy", "1em")
       .style("text-anchor", "middle")
       .style('fill', 'red')
-      .text("Température");
+      .text("Température (°C)");
 
   svg.append("text")
         .attr("x", (width / 2))
