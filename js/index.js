@@ -49,7 +49,6 @@ var request = d3.json("../json/meteo.json")
 
 function loadJson(d){
 	data = d;
-  // Load la carte par défaut sans filtres
   createStation();
   createMap();
   createVilles();
@@ -146,7 +145,8 @@ function updateVilles()
      }
   })
 
-  d3.selectAll("svg text").text(function(d){
+  d3.selectAll("#map svg text").text(function(d){
+    console.log('test');
     try {
       if(d.detailJour.length > day - 1)
       {
@@ -156,7 +156,6 @@ function updateVilles()
     catch(error) {
     }
   });
-
 }
 
 function createVilles() {
