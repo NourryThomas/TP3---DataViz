@@ -185,15 +185,14 @@ function createVilles() {
        .attr("font-size", "12px")
        .text(function(d){if(d.detailJour.length > day - 1) { return d.detailJour[day - 1]['tempMoye']; }});
 
-
 }
 
 function createLineChart(data) {
 
     // set the dimensions and margins of the graph
   var margin = {top: 20, right: 20, bottom: 30, left: 50},
-      width = 960 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
+      width = 720 - margin.left - margin.right,
+      height = 375 - margin.top - margin.bottom;
 
   // parse the date / time
   var parseTime = d3.timeParse("%d-%b-%y");
@@ -222,8 +221,8 @@ function createLineChart(data) {
   // appends a 'group' element to 'svg'
   // moves the 'group' element to the top left margin
   var svg = d3.select("#line_chart").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+      .attr("width", width + margin.left + margin.right + 20)
+      .attr("height", height + margin.top + margin.bottom + 15)
       .append("g")
       .attr("transform","translate(" + margin.left + "," + margin.top + ")");
 
@@ -232,8 +231,6 @@ function createLineChart(data) {
     d.t = +(d.t / 100);
     d.p = +(Math.round( d.p * 10 ) / 10);
   });
-
-  console.log(data);
 
   // Scale the range of the data
   x.domain(d3.extent(data, function(d) { return d.d; }));
@@ -251,6 +248,7 @@ function createLineChart(data) {
 
   svg.append("g")            // Add the X Axis
       .attr("class", "x axis")
+      .attr("id", "x_axis")
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis);
 
@@ -264,6 +262,7 @@ function createLineChart(data) {
 
   svg.append("g")
       .attr("class", "y axis")
+      .attr("id", "y_axis")
       .style("fill", "steelblue")
       .call(yAxisLeft);
 
@@ -278,7 +277,22 @@ function createLineChart(data) {
 
   svg.append("g")
       .attr("class", "y axis")
+      .attr("id", "y1_axis")
       .attr("transform", "translate(" + width + " ,0)")
       .style("fill", "red")
       .call(yAxisRight);
+
+    // text label for the y1 axis
+  svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 + width + margin.right)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Température");
+
+  $('#x_axis > g > text').each(function() {
+    var x_axis_label = $(this).text();
+    $(this).text(x_axis_label.replace('Feb', 'Fev'));
+  });
 }
