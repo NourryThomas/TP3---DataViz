@@ -39,3 +39,7 @@ div.tooltip {
     stroke-width: 1;
     shape-rendering: crispEdges;
 }
+
+#map{
+  width:50%
+}

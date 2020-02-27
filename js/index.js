@@ -1,11 +1,11 @@
 var data = [];
 var stations = [];
 var stationsName = [];
-const width = 550, height = 550;
+const width = 750, height = 750;
 
 const projection = d3.geoConicConformal()
   .center([2.454071, 46.279229])
-  .scale(2600)
+  .scale(3800)
   .translate([width / 2, height / 2]);
 
 function getDay(){
@@ -27,9 +27,11 @@ function createMap() {
 
   path.projection(projection);
 
-  const svg = d3.select('#map').append("svg")
+  const svg = d3.select('#map')
+      .append("svg")
       .attr("id", "svg")
-      .attr("viewBox", "0 0 " + width*2 + " " + height*2);
+      .attr("viewBox", "0 0 750 750");
+      //.attr("height",height);
 
   const deps = svg.append("g");
 
@@ -43,22 +45,22 @@ function createMap() {
         .enter()
         .append("path")
         .attr('class', 'department')
-        .attr("d", path)
-        .on("mouseover", function(d) {
-            div.transition()
-                .duration(200)
-                .style("opacity", .9);
-            div.html("Département : " + d.properties.NOM_DEPT + "<br/>"
-                  +  "Région : " + d.properties.NOM_REGION)
-                .style("left", (d3.event.pageX + 30) + "px")
-                .style("top", (d3.event.pageY - 30) + "px")
-        })
-        .on("mouseout", function(d) {
-            div.style("opacity", 0);
-            div.html("")
-                .style("left", "-500px")
-                .style("top", "-500px");
-        });
+        .attr("d", path);
+        // .on("mouseover", function(d) {
+        //     div.transition()
+        //         .duration(200)
+        //         .style("opacity", .9);
+        //     div.html("Département : " + d.properties.NOM_DEPT + "<br/>"
+        //           +  "Région : " + d.properties.NOM_REGION)
+        //         .style("left", (d3.event.pageX + 30) + "px")
+        //         .style("top", (d3.event.pageY - 30) + "px")
+        // })
+        // .on("mouseout", function(d) {
+        //     div.style("opacity", 0);
+        //     div.html("")
+        //         .style("left", "-500px")
+        //         .style("top", "-500px");
+        // });
     });
 }
 
@@ -221,7 +223,7 @@ function createVilles() {
        })
        .attr("x", function (d) { return projection([d.longitude, d.latitude])[0] - 15; })
        .attr("y", function (d) { return projection([d.longitude, d.latitude])[1] - 15; })
-       .attr("width", "35px")
+       .attr("width", "40px")
        .on("mouseover", function(d) {
            div.transition()
                .duration(200)
@@ -242,10 +244,10 @@ function createVilles() {
 
    /* Create the text for each block */
    elemEnter.append("text")
-       .attr("x", function (d) { return projection([d.longitude, d.latitude])[0] + 1; })
+       .attr("x", function (d) { return projection([d.longitude, d.latitude])[0] + 5; })
        .attr("y", function (d) { return projection([d.longitude, d.latitude])[1] - 15; })
        .attr("text-anchor", "middle")
-       .attr("font-size", "12px")
+       .attr("font-size", "13px")
        .text(function(d){
            if(d.detailJour.length > day - 1)
            {
