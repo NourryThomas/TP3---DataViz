@@ -41,12 +41,10 @@ $( function() {
     minDate: new Date(1999, 1, 1),
     maxDate: new Date(1999, 1, 28),
     onSelect: function (dateText,inst) {
+      console.log(inst);
       updateVilles();
     }
   });
-});
-$(document).ready(function(){
-
 });
 </script>
 </body>
