@@ -53,7 +53,7 @@ function loadJson(d){
   createStation();
   createMap();
   createVilles();
-  createLineChart(data);
+  createLineChart();
 }
 
 function createStation(){
@@ -234,12 +234,13 @@ function createVilles() {
        });
 }
 
-function createLineChart(data) {
+function createLineChart() {
 
     // set the dimensions and margins of the graph
   var margin = {top: 20, right: 20, bottom: 30, left: 50},
       width = 720 - margin.left - margin.right,
-      height = 375 - margin.top - margin.bottom;
+      height = 375 - margin.top - margin.bottom,
+      tooltip = { width: 100, height: 100, x: 10, y: -30 };
 
   // parse the date / time
   var parseTime = d3.timeParse("%d-%b-%y");
@@ -324,6 +325,58 @@ function createLineChart(data) {
       .attr("id", "y_axis")
       .style("fill", "steelblue")
       .call(yAxisLeft);
+
+  console.log(data[0]);
+
+  var focus = svg.append("g")
+            .attr("class", "focus")
+            .style("display", "none");
+
+      focus.append("circle")
+                .attr("r", 5);
+
+      focus.append("rect")
+          .attr("class", "tooltip")
+          .attr("width", 100)
+          .attr("height", 50)
+          .attr("x", 10)
+          .attr("y", -22)
+          .attr("rx", 4)
+          .attr("ry", 4);
+
+      focus.append("text")
+          .attr("class", "tooltip-date")
+          .attr("x", 18)
+          .attr("y", -2);
+
+      focus.append("text")
+          .attr("x", 18)
+          .attr("y", 18)
+          .text("Likes:");
+
+      focus.append("text")
+          .attr("class", "tooltip-likes")
+          .attr("x", 60)
+          .attr("y", 18);
+
+      svg.append("rect")
+          .attr("class", "overlay")
+          .attr("width", width)
+          .attr("height", height)
+          .on("mouseover", function() { focus.style("display", null); })
+          .on("mouseout", function() { focus.style("display", "none"); })
+          .on("mousemove", mousemove);
+
+      function mousemove() {
+          var x0 = x.invert(d3.mouse(this)[0]),
+              i = "Oui",
+              d0 = data[i - 1],
+              d1 = data[i],
+              d = x0 - d0.d > d1.d - x0 ? d1 : d0;
+          focus.attr("transform", "translate(" + x(d.d) + "," + y(d.t) + ")");
+          focus.select(".tooltip-date").text(d.d);
+          focus.select(".tooltip-likes").text(d.t);
+      }
 
     // text label for the y axis
   svg.append("text")
