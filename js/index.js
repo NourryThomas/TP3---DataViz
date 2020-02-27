@@ -30,7 +30,6 @@ function createMap() {
   const svg = d3.select('#map').append("svg")
       .attr("id", "svg")
       .attr("viewBox", "0 0 " + width*2 + " " + height*2);
-      // UTILISER LES VIEWBOW !!!!
 
   const deps = svg.append("g");
 
@@ -77,14 +76,13 @@ function loadJson(d){
 }
 
 function createStation(){
-
+  stations.push("FakeData");
   for(var i = 0; i < data.length; i++)
   {
     for(var j = 0; j < data[i]['station'].length; j++)
     {
       if(!stationsName.includes(data[i]['station'][j]['n']))
       {
-
         stationsName.push(data[i]['station'][j]['n']);
         var nom = data[i]['station'][j]['n'];
         var latitude = data[i]['station'][j]['lat'];
@@ -96,20 +94,40 @@ function createStation(){
           for(var m = 0; m < data[l]['station'].length; m++)
           {
             if(data[l]['station'][m]['n'] == nom){
+
               var temp = data[l]['station'][m]['t'];
               var tempMoye = parseFloat(temp/100).toFixed(0);
               var preMoye = parseFloat(data[l]['station'][m]['p']).toFixed(2);
+              var min = 0;
+              var max = 0;
+
+              for(var z = 0; z < data[l]['station'][m]['hours'].length; z++)
+              {
+                if(z == 0)
+                {
+                  max = data[l]['station'][m]['hours'][z]['t']/100;
+                  min = data[l]['station'][m]['hours'][z]['t']/100;
+                }
+                if(data[l]['station'][m]['hours'][z]['t']/100 > max)
+                {
+                  max = data[l]['station'][m]['hours'][z]['t']/100;
+                }
+                if(data[l]['station'][m]['hours'][z]['t']/100 < min) {
+                  min = data[l]['station'][m]['hours'][z]['t']/100;
+                }
+              }
 
               var infoMeteo = {
                 tempMoye : tempMoye,
                 preMoye : preMoye,
+                min : min,
+                max : max,
                 detailHoraire : data[l]['station'][m]['hours']
               }
               detailJour.push(infoMeteo);
             }
           }
         }
-
         var infoStation = {
             nom: nom,
             latitude: latitude,
@@ -125,7 +143,6 @@ function createStation(){
 
 function loadSelect() {
     stationsName.sort();
-
     for(var i = 0; i < stationsName.length; i++)
     {
       var o = new Option(stationsName[i], "ville_" + i);
@@ -137,14 +154,40 @@ function loadSelect() {
 function updateVilles()
 {
   day = getDay();
-  d3.selectAll("svg text").text(function(d){if(d.detailJour.length > day - 1) { return d.detailJour[day - 1]['tempMoye']; }});
-  d3.selectAll("svg image").attr("xlink:href", function (d) { if(1 == 1) return "../img/tet.png"; })
+  d3.selectAll("svg image") .attr("xlink:href", function (d) {
+     if(d.detailJour[day - 1]['tempMoye'] <= 1 && d.detailJour[day - 1]['preMoye'] >= 0.75 && d.detailJour[day - 1]['tempMoye'] >= -1)
+      return "../img/neige.png";
+     else if( d.detailJour[day - 1]['tempMoye'] >= 25 && d.detailJour[day - 1]['preMoye'] <= 0.15)
+       return "../img/soleil.png";
+     else if(d.detailJour[day - 1]['preMoye'] >= 1.00)
+        return "../img/fortes_pluies.png";
+     else if(d.detailJour[day - 1]['preMoye'] >= 0.50)
+       return "../img/pluies.png";
+     else if(d.detailJour[day - 1]['preMoye'] >= 0.25 )
+       return "../img/averses.png";
+     else if(d.detailJour[day - 1]['preMoye'] >= 0.15)
+         return "../img/risque_averse.png";
+     else if(d.detailJour[day - 1]['preMoye'] > 0.00 && d.detailJour[day - 1]['tempMoye'] <= 15)
+         return "../img/éclaircits.png";
+     else if(d.detailJour[day - 1]['preMoye'] == 0.00)
+       return "../img/soleil.png";
+   })
+
+  d3.selectAll("svg text").text(function(d){
+    try {
+      if(d.detailJour.length > day - 1)
+      {
+        return d.detailJour[day - 1]['tempMoye'];
+      }
+    }
+    catch(error) {
+    }
+  });
 }
 
 function createVilles() {
 
     day = getDay();
-
     var div = d3.select("body").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
@@ -158,15 +201,35 @@ function createVilles() {
            .append("g");
 
    var circle = elemEnter.append("image")
-       .attr("xlink:href", function (d) { if(1 == 1) return "../img/nuageux.png"; })
+       .attr("xlink:href", function (d) {
+         if( -1 <= d.detailJour[day - 1]['tempMoye'] <= 1 && d.detailJour[day - 1]['preMoye'] >= 0.75)
+          return "../img/neige.png";
+         else if( d.detailJour[day - 1]['tempMoye'] >= 25 && d.detailJour[day - 1]['preMoye'] <= 0.15)
+           return "../img/soleil.png";
+         else if(d.detailJour[day - 1]['preMoye'] >= 1.00)
+            return "../img/fortes_pluies.png";
+         else if(d.detailJour[day - 1]['preMoye'] >= 0.50)
+           return "../img/pluies.png";
+         else if(d.detailJour[day - 1]['preMoye'] >= 0.25 )
+           return "../img/averses.png";
+         else if(d.detailJour[day - 1]['preMoye'] >= 0.15)
+             return "../img/risque_averse.png";
+         else if(d.detailJour[day - 1]['preMoye'] > 0.00 && d.detailJour[day - 1]['tempMoye'] <= 15)
+             return "../img/éclaircits.png";
+         else if(d.detailJour[day - 1]['preMoye'] == 0.00)
+           return "../img/soleil.png";
+       })
        .attr("x", function (d) { return projection([d.longitude, d.latitude])[0] - 15; })
-       .attr("y", function (d) { return projection([d.longitude, d.latitude])[1] - 5; })
+       .attr("y", function (d) { return projection([d.longitude, d.latitude])[1] - 15; })
        .attr("width", "35px")
        .on("mouseover", function(d) {
            div.transition()
                .duration(200)
                .style("opacity", .9);
-           div.html(d.nom+"<br/>")
+           div.html(d.nom+"<br/>"
+           + "Précipitations : " + d.detailJour[day - 1]['preMoye'] + "mm</br>"
+           + "Minimum : " + d.detailJour[day - 1]['min'] + "°</br>"
+           + "Maximum : " + d.detailJour[day - 1]['max'] + "°</br>")
                .style("left", (d3.event.pageX - 10) + "px")
                .style("top", (d3.event.pageY - 10) + "px");
        })
@@ -179,11 +242,16 @@ function createVilles() {
 
    /* Create the text for each block */
    elemEnter.append("text")
-       .attr("x", function (d) { return projection([d.longitude, d.latitude])[0]; })
-       .attr("y", function (d) { return projection([d.longitude, d.latitude])[1]; })
+       .attr("x", function (d) { return projection([d.longitude, d.latitude])[0] + 1; })
+       .attr("y", function (d) { return projection([d.longitude, d.latitude])[1] - 15; })
        .attr("text-anchor", "middle")
        .attr("font-size", "12px")
-       .text(function(d){if(d.detailJour.length > day - 1) { return d.detailJour[day - 1]['tempMoye']; }});
+       .text(function(d){
+           if(d.detailJour.length > day - 1)
+           {
+             return d.detailJour[day - 1]['tempMoye'];
+           }
+       });
 
 }
 
