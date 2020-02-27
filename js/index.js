@@ -35,10 +35,6 @@ function createMap() {
 
   const deps = svg.append("g");
 
-  var div = d3.select("body").append("div")
-      .attr("class", "tooltip")
-      .style("opacity", 0);
-
   d3.json('../json/departements.json').then(function(geojson) {
     deps.selectAll("path")
         .data(geojson.features)
@@ -192,7 +188,9 @@ function createVilles() {
     day = getDay();
     var div = d3.select("body").append("div")
         .attr("class", "tooltip")
-        .style("opacity", 0);
+        .style("opacity", 0)
+        .style("left", "-500px")
+        .style("top", "-500px");
 
     var svg = d3.select("#map").select("svg");
 
