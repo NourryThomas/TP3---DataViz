@@ -50,8 +50,8 @@ var request = d3.json("../json/meteo.json")
 function loadJson(d){
 	data = d;
   // Load la carte par défaut sans filtres
-  createMap();
   createStation();
+  createMap();
   createVilles();
   createLineChart(data);
 }
@@ -125,24 +125,26 @@ function createStation(){
 function updateVilles()
 {
   day = getDay();
-  d3.selectAll("svg image") .attr("xlink:href", function (d) {
-     if(d.detailJour[day - 1]['tempMoye'] <= 1 && d.detailJour[day - 1]['preMoye'] >= 0.75 && d.detailJour[day - 1]['tempMoye'] >= -1)
-      return "../img/neige.png";
-     else if( d.detailJour[day - 1]['tempMoye'] >= 25 && d.detailJour[day - 1]['preMoye'] <= 0.15)
-       return "../img/soleil.png";
-     else if(d.detailJour[day - 1]['preMoye'] >= 1.00)
-        return "../img/fortes_pluies.png";
-     else if(d.detailJour[day - 1]['preMoye'] >= 0.50)
-       return "../img/pluies.png";
-     else if(d.detailJour[day - 1]['preMoye'] >= 0.25 )
-       return "../img/averses.png";
-     else if(d.detailJour[day - 1]['preMoye'] >= 0.15)
-         return "../img/risque_averse.png";
-     else if(d.detailJour[day - 1]['preMoye'] > 0.00 && d.detailJour[day - 1]['tempMoye'] <= 15)
-         return "../img/éclaircits.png";
-     else if(d.detailJour[day - 1]['preMoye'] == 0.00)
-       return "../img/soleil.png";
-   })
+  d3.selectAll("svg image")    .attr("xlink:href", function (d) {
+    if(d.detailJour.length >= day){
+      if(d.detailJour[day - 1]['tempMoye'] <= 1 && d.detailJour[day - 1]['preMoye'] >= 0.75 && d.detailJour[day - 1]['tempMoye'] >= -1)
+        return "../img/neige.png";
+       else if( d.detailJour[day - 1]['tempMoye'] >= 25 && d.detailJour[day - 1]['preMoye'] <= 0.15)
+         return "../img/soleil.png";
+       else if(d.detailJour[day - 1]['preMoye'] >= 1.00)
+          return "../img/fortes_pluies.png";
+       else if(d.detailJour[day - 1]['preMoye'] >= 0.50)
+         return "../img/pluies.png";
+       else if(d.detailJour[day - 1]['preMoye'] >= 0.25 )
+         return "../img/averses.png";
+       else if(d.detailJour[day - 1]['preMoye'] >= 0.15)
+           return "../img/risque_averse.png";
+       else if(d.detailJour[day - 1]['preMoye'] > 0.00 && d.detailJour[day - 1]['tempMoye'] <= 15)
+           return "../img/éclaircits.png";
+       else if(d.detailJour[day - 1]['preMoye'] == 0.00)
+         return "../img/soleil.png";
+     }
+  })
 
   d3.selectAll("svg text").text(function(d){
     try {
@@ -154,11 +156,13 @@ function updateVilles()
     catch(error) {
     }
   });
+
 }
 
 function createVilles() {
 
     day = getDay();
+
     var div = d3.select("body").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0)
@@ -175,22 +179,24 @@ function createVilles() {
 
    var circle = elemEnter.append("image")
        .attr("xlink:href", function (d) {
-         if( -1 <= d.detailJour[day - 1]['tempMoye'] <= 1 && d.detailJour[day - 1]['preMoye'] >= 0.75)
-          return "../img/neige.png";
-         else if( d.detailJour[day - 1]['tempMoye'] >= 25 && d.detailJour[day - 1]['preMoye'] <= 0.15)
-           return "../img/soleil.png";
-         else if(d.detailJour[day - 1]['preMoye'] >= 1.00)
-            return "../img/fortes_pluies.png";
-         else if(d.detailJour[day - 1]['preMoye'] >= 0.50)
-           return "../img/pluies.png";
-         else if(d.detailJour[day - 1]['preMoye'] >= 0.25 )
-           return "../img/averses.png";
-         else if(d.detailJour[day - 1]['preMoye'] >= 0.15)
-             return "../img/risque_averse.png";
-         else if(d.detailJour[day - 1]['preMoye'] > 0.00 && d.detailJour[day - 1]['tempMoye'] <= 15)
-             return "../img/éclaircits.png";
-         else if(d.detailJour[day - 1]['preMoye'] == 0.00)
-           return "../img/soleil.png";
+          if(d.detailJour.length >= day){
+            if(d.detailJour[day - 1]['tempMoye'] <= 1 && d.detailJour[day - 1]['preMoye'] >= 0.75 && d.detailJour[day - 1]['tempMoye'] >= -1)
+              return "../img/neige.png";
+             else if( d.detailJour[day - 1]['tempMoye'] >= 25 && d.detailJour[day - 1]['preMoye'] <= 0.15)
+               return "../img/soleil.png";
+             else if(d.detailJour[day - 1]['preMoye'] >= 1.00)
+                return "../img/fortes_pluies.png";
+             else if(d.detailJour[day - 1]['preMoye'] >= 0.50)
+               return "../img/pluies.png";
+             else if(d.detailJour[day - 1]['preMoye'] >= 0.25 )
+               return "../img/averses.png";
+             else if(d.detailJour[day - 1]['preMoye'] >= 0.15)
+                 return "../img/risque_averse.png";
+             else if(d.detailJour[day - 1]['preMoye'] > 0.00 && d.detailJour[day - 1]['tempMoye'] <= 15)
+                 return "../img/éclaircits.png";
+             else if(d.detailJour[day - 1]['preMoye'] == 0.00)
+               return "../img/soleil.png";
+           }
        })
        .attr("x", function (d) { return projection([d.longitude, d.latitude])[0] - 15; })
        .attr("y", function (d) { return projection([d.longitude, d.latitude])[1] - 15; })

@@ -13,12 +13,12 @@
 <TITLE> Météo - DataViz </TITLE>
 </HEAD>
 <body>
-  <h1 class="center_txt">Météo de la France en Février 1999</h1>
-  <br>
-  <div id="filtres" class="div_filtres">
-    <input id="datepicker" placeholder="Sélectionner une date" type="text">
-  </div>
   <div id="container">
+    <div class="center_txt">Météo de la France en Février 1999</div>
+    <br>
+    <div id="filtres" class="div_filtres">
+      <input id="datepicker" placeholder="Sélectionner une date" type="text">
+    </div>
     <div id="map">
     </div>
     <div id="container_graphique">
@@ -40,6 +40,7 @@ $( function() {
   $( "#datepicker" ).datepicker({
     minDate: new Date(1999, 1, 1),
     maxDate: new Date(1999, 1, 28),
+    autoclose: true,
     onSelect: function (dateText,inst) {
       updateVilles();
     }
