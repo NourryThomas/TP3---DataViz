@@ -361,6 +361,14 @@ function createLineChart(data) {
       .style('fill', 'red')
       .text("Température");
 
+  svg.append("text")
+        .attr("x", (width / 2))
+        .attr("y", 2 - (margin.top / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .style("text-decoration", "underline")
+        .text("Evolution des températures et de la pluviométrie moyenne sur février");
+
   var tab_date = [];
   $('#x_axis > g > text').each(function(occ) {
     var x_axis_label = $(this).text();
