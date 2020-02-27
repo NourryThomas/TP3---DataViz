@@ -277,11 +277,11 @@ function createLineChart(data) {
   var yAxisRight = d3.axisRight(y1).ticks(5);
 
   // define the line
-  var valueline = d3.line()
+  var valueline = d3.line().curve(d3.curveCardinal)
       .x(function(d) { return x(d.d); })
       .y(function(d) { return y(d.p); });
   // define the line
-  var valueline2 = d3.line()
+  var valueline2 = d3.line().curve(d3.curveCardinal)
       .x(function(d) { return x(d.d); })
       .y(function(d) { return y1(d.t); });
 
