@@ -343,6 +343,7 @@ function createLineChart(data) {
       .attr("x",0 - (height / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
+      .style('fill', 'steelblue')
       .text("Pluviométrie");
 
   svg.append("g")
@@ -359,10 +360,24 @@ function createLineChart(data) {
       .attr("x",0 - (height / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
+      .style('fill', 'red')
       .text("Température");
 
-  $('#x_axis > g > text').each(function() {
+  svg.append("text")
+        .attr("x", (width / 2))
+        .attr("y", 2 - (margin.top / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .style("text-decoration", "underline")
+        .text("Evolution des températures et de la pluviométrie moyenne sur février");
+
+  var tab_date = [];
+  $('#x_axis > g > text').each(function(occ) {
     var x_axis_label = $(this).text();
-    $(this).text(x_axis_label.replace('Feb', 'Fev'));
+    var jour = x_axis_label.substring(4);
+    var mois = x_axis_label.substring(0, 3);
+    mois = mois.replace('Feb', 'Fev');
+    tab_date.push(jour + " " + mois);
+    $(this).text(tab_date[occ]);
   });
 }
