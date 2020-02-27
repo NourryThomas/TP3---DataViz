@@ -24,6 +24,7 @@ div.tooltip {
 
 .center_txt {
   text-align: center;
+  font: 3vw sans-serif;
 }
 
 #line_chart > svg > g > path {
@@ -51,4 +52,59 @@ div.tooltip {
 .nomVille{
   font-weight: bold;
   margin-bottom: 5%;
+}
+
+#datepicker{
+  width: 15%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+  font: 2vw sans-serif;
+}
+
+@media (min-width: 576px) {
+  #container_graphique{
+    float:left;
+  }
+  #map{
+    float:left;
+  }
+  #datepicker{
+    width: 15%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    font: 1vw sans-serif;
+  }
+}
+
+@media (max-width: 576px) {
+  #container{
+    transform: scale(1.8);
+    margin-top : 50%
+  }
+  #map{
+    transform: scale(1.1);
+    margin-top: 5px !important;
+    margin: auto;
+    flex-direction: row;
+    display: flex;
+    justify-content: center;
+  }
+  #container_graphique{
+    margin: auto;
+    flex-direction: row;
+    display: flex;
+    justify-content: center;
+  }
+  #datepicker{
+    width: 28%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    font: 2vw sans-serif;
+  }
 }
