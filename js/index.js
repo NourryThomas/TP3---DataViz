@@ -279,12 +279,33 @@ function createLineChart(data) {
   y1.domain([0, d3.max(data, function(d) {
     return Math.max(d.t); })]);
 
-  svg.append("path")        // Add the valueline path.
+  const transitionPath = d3
+    .transition()
+    .ease(d3.easeSin)
+    .duration(2500);
+
+  var path_pluvio = svg.append("path")
         .attr("d", valueline(data));
 
-  svg.append("path")        // Add the valueline2 path.
+  var path_length = path_pluvio.node().getTotalLength();
+
+  d3.select("#line_chart > svg > g > path:first-child")
+      .attr("stroke-dasharray", path_length)
+      .attr("stroke-dashoffset", path_length)
+      .transition(transitionPath)
+      .attr("stroke-dashoffset", 0);
+
+  var path_temp = svg.append("path")        // Add the valueline2 path.
       .style("stroke", "red")
       .attr("d", valueline2(data));
+
+  path_length = path_temp.node().getTotalLength();
+
+  d3.select("#line_chart > svg > g > path:last-child")
+      .attr("stroke-dasharray", path_length)
+      .attr("stroke-dashoffset", path_length)
+      .transition(transitionPath)
+      .attr("stroke-dashoffset", 0);
 
   svg.append("g")            // Add the X Axis
       .attr("class", "x axis")
