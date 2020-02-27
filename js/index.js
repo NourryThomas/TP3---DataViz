@@ -255,7 +255,6 @@ function createVilles() {
              return d.detailJour[day - 1]['tempMoye'] + "°C";
            }
        });
-
 }
 
 function createLineChart(data) {
