@@ -70,14 +70,10 @@ function loadJson(d){
 	data = d;
   // Load la carte par défaut sans filtres
   createMap();
-<<<<<<< HEAD
   createStation();
   loadSelect();
   createVilles();
-=======
-  loadVilles();
   createLineChart(data);
->>>>>>> ed3a646b297b7d4d0db253569a53573a72e6eee4
 }
 
 function createStation(){
