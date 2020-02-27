@@ -30,7 +30,7 @@ function createMap() {
   const svg = d3.select('#map')
       .append("svg")
       .attr("id", "svg")
-      .attr("viewBox", "0 0 750 750");
+      .attr("viewBox", "0 0 " + width + " " + height);
       //.attr("height",height);
 
   const deps = svg.append("g");
@@ -290,8 +290,9 @@ function createLineChart(data) {
   // appends a 'group' element to 'svg'
   // moves the 'group' element to the top left margin
   var svg = d3.select("#line_chart").append("svg")
-      .attr("width", width + margin.left + margin.right + 20)
-      .attr("height", height + margin.top + margin.bottom + 15)
+      .attr("viewBox", "0 0 " + width * 1.13 + " " + height  * 1.13)
+      // .attr("width", width + margin.left + margin.right + 20)
+      // .attr("height", height + margin.top + margin.bottom + 15)
       .append("g")
       .attr("transform","translate(" + margin.left + "," + margin.top + ")");
 
