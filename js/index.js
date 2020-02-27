@@ -42,21 +42,6 @@ function createMap() {
         .append("path")
         .attr('class', 'department')
         .attr("d", path);
-        // .on("mouseover", function(d) {
-        //     div.transition()
-        //         .duration(200)
-        //         .style("opacity", .9);
-        //     div.html("Département : " + d.properties.NOM_DEPT + "<br/>"
-        //           +  "Région : " + d.properties.NOM_REGION)
-        //         .style("left", (d3.event.pageX + 30) + "px")
-        //         .style("top", (d3.event.pageY - 30) + "px")
-        // })
-        // .on("mouseout", function(d) {
-        //     div.style("opacity", 0);
-        //     div.html("")
-        //         .style("left", "-500px")
-        //         .style("top", "-500px");
-        // });
     });
 }
 
@@ -228,8 +213,8 @@ function createVilles() {
                .style("opacity", .9);
            div.html("<div class='nomVille'>" + d.nom+" </div>"
            + "Précipitations : " + d.detailJour[day - 1]['preMoye'] + "mm</br>"
-           + "Minimum : " + d.detailJour[day - 1]['min'] + "°</br>"
-           + "Maximum : " + d.detailJour[day - 1]['max'] + "°</br>")
+           + "Minimum : " + d.detailJour[day - 1]['min'] + "°C</br>"
+           + "Maximum : " + d.detailJour[day - 1]['max'] + "°C</br>")
                .style("left", (d3.event.pageX - 10) + "px")
                .style("top", (d3.event.pageY - 10) + "px");
        })
