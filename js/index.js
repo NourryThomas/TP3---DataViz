@@ -30,7 +30,7 @@ function createMap() {
   const svg = d3.select('#map')
       .append("svg")
       .attr("id", "svg")
-      .attr("viewBox", "0 0 " + width + " " + height);
+      .attr("viewBox", "0 0 " + width * 1.15 + " " + height);
       //.attr("height",height);
 
   const deps = svg.append("g");
@@ -179,7 +179,7 @@ function updateVilles()
     try {
       if(d.detailJour.length > day - 1)
       {
-        return d.detailJour[day - 1]['tempMoye'];
+        return d.detailJour[day - 1]['tempMoye'] + "°C";
       }
     }
     catch(error) {
@@ -228,7 +228,7 @@ function createVilles() {
            div.transition()
                .duration(200)
                .style("opacity", .9);
-           div.html(d.nom+"<br/>"
+           div.html("<div class='nomVille'>" + d.nom+" </div>"
            + "Précipitations : " + d.detailJour[day - 1]['preMoye'] + "mm</br>"
            + "Minimum : " + d.detailJour[day - 1]['min'] + "°</br>"
            + "Maximum : " + d.detailJour[day - 1]['max'] + "°</br>")
@@ -248,10 +248,11 @@ function createVilles() {
        .attr("y", function (d) { return projection([d.longitude, d.latitude])[1] - 15; })
        .attr("text-anchor", "middle")
        .attr("font-size", "13px")
+       .attr("font-weight", "bold")
        .text(function(d){
            if(d.detailJour.length > day - 1)
            {
-             return d.detailJour[day - 1]['tempMoye'];
+             return d.detailJour[day - 1]['tempMoye'] + "°C";
            }
        });
 }
@@ -290,7 +291,7 @@ function createLineChart(data) {
   // appends a 'group' element to 'svg'
   // moves the 'group' element to the top left margin
   var svg = d3.select("#line_chart").append("svg")
-      .attr("viewBox", "0 0 " + width * 1.13 + " " + height  * 1.13)
+      .attr("viewBox", "0 0 " + width * 1.15 + " " + height  * 1.15)
       // .attr("width", width + margin.left + margin.right + 20)
       // .attr("height", height + margin.top + margin.bottom + 15)
       .append("g")
@@ -321,14 +322,6 @@ function createLineChart(data) {
       .attr("id", "x_axis")
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis);
-
-    // text label for the x axis
-  svg.append("text")
-      .attr("transform",
-            "translate(" + (width/2) + " ," +
-                           (height + margin.top + 20) + ")")
-      .style("text-anchor", "middle")
-      .text("Date");
 
   svg.append("g")
       .attr("class", "y axis")
