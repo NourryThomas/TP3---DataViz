@@ -31,7 +31,6 @@ function createMap() {
       .append("svg")
       .attr("id", "svg")
       .attr("viewBox", "0 0 " + width * 1.15 + " " + height);
-      //.attr("height",height);
 
   const deps = svg.append("g");
 
@@ -53,7 +52,6 @@ function loadJson(d){
   // Load la carte par défaut sans filtres
   createMap();
   createStation();
-  loadSelect();
   createVilles();
   createLineChart(data);
 }
@@ -122,16 +120,6 @@ function createStation(){
       }
     }
   }
-}
-
-function loadSelect() {
-    stationsName.sort();
-    for(var i = 0; i < stationsName.length; i++)
-    {
-      var o = new Option(stationsName[i], "ville_" + i);
-      $(o).html(stationsName[i]);
-      $("#select_ville").append(o);
-    }
 }
 
 function updateVilles()
@@ -275,8 +263,6 @@ function createLineChart(data) {
   // moves the 'group' element to the top left margin
   var svg = d3.select("#line_chart").append("svg")
       .attr("viewBox", "0 0 " + width * 1.15 + " " + height  * 1.15)
-      // .attr("width", width + margin.left + margin.right + 20)
-      // .attr("height", height + margin.top + margin.bottom + 15)
       .append("g")
       .attr("transform","translate(" + margin.left + "," + margin.top + ")");
 
