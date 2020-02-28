@@ -146,7 +146,6 @@ function updateVilles()
   })
 
   d3.selectAll("#map svg text").text(function(d){
-    console.log('test');
     try {
       if(d.detailJour.length > day - 1)
       {
@@ -216,6 +215,9 @@ function createVilles() {
            div.html("")
                .style("left", "-500px")
                .style("top", "-500px");
+       })
+       .on("click", function(d) {
+           console.log(d.nom);
        });
 
    /* Create the text for each block */
