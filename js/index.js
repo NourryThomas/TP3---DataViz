@@ -30,7 +30,7 @@ function createMap() {
   const svg = d3.select('#map')
       .append("svg")
       .attr("id", "svg")
-      .attr("viewBox", "0 0 " + width * 1.15 + " " + height);
+      .attr("viewBox", "0 0 " + width * 1.05 + " " + height);
 
   const deps = svg.append("g");
 
@@ -241,7 +241,7 @@ function createLineChart() {
     // set the dimensions and margins of the graph
   var margin = {top: 20, right: 20, bottom: 30, left: 50},
       width = 720 - margin.left - margin.right,
-      height = 375 - margin.top - margin.bottom,
+      height = 360 - margin.top - margin.bottom,
       tooltip = { width: 100, height: 100, x: 10, y: -30 },
       options = {weekday: "long", month: "long", day: "2-digit"};
 
@@ -454,7 +454,7 @@ function createDayLineChart(detailHoraires, nomStation, day) {
   // set the dimensions and margins of the graph
 var margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = 720 - margin.left - margin.right,
-    height = 375 - margin.top - margin.bottom,
+    height = 360 - margin.top - margin.bottom,
     tooltip = { width: 100, height: 100, x: 10, y: -30 },
     options = {hour:"2-digit", minute:"2-digit"};
 
