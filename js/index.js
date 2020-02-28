@@ -217,14 +217,7 @@ function createVilles() {
                .style("top", "-500px");
        })
        .on("click", function(d) {
-         $('#day_line_chart').empty();
-         if($('#datepicker').val().substring(0,2)[0] == 0)
-         {
-           createDayLineChart(d.nom, $('#datepicker').val().substring(1,2));
-         }
-         else {
-           createDayLineChart(d.nom, $('#datepicker').val().substring(0,2));
-         }
+         createDayLineChart(d.detailJour[day].detailHoraire, d.nom, day);
        });
 
    /* Create the text for each block */
@@ -455,8 +448,13 @@ function createLineChart() {
   });
 }
 
+<<<<<<< HEAD
 function createDayLineChart() {
 
+=======
+function createDayLineChart(detailHoraires, nomStation, day) {
+  console.log(detailHoraires);
+>>>>>>> 20ec225cefb45b44f4a8ad3dcb2117c7e430c069
 }
 
 svg.append("text")
