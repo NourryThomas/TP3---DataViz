@@ -53,7 +53,6 @@ function loadJson(d){
   createMap();
   createVilles();
   createLineChart();
-  //createDayLineChart();
 }
 
 function createStation(){
@@ -218,7 +217,14 @@ function createVilles() {
                .style("top", "-500px");
        })
        .on("click", function(d) {
-           console.log(d.nom);
+         $('#day_line_chart').empty();
+         if($('#datepicker').val().substring(0,2)[0] == 0)
+         {
+           createDayLineChart(d.nom, $('#datepicker').val().substring(1,2));
+         }
+         else {
+           createDayLineChart(d.nom, $('#datepicker').val().substring(0,2));
+         }
        });
 
    /* Create the text for each block */
@@ -449,27 +455,37 @@ function createLineChart() {
   });
 }
 
-function createDayLineChart() {
+function createDayLineChart(nom_station, jour_station) {
 
       // set the dimensions and margins of the graph
     var margin = {top: 20, right: 20, bottom: 30, left: 50},
         width = 720 - margin.left - margin.right,
         height = 375 - margin.top - margin.bottom,
         tooltip = { width: 100, height: 100, x: 10, y: -30 },
-        options = {weekday: "long", month: "long", day: "2-digit"},
-        heure_global = 0;
+        options = {weekday: "long", month: "long", day: "2-digit"};
 
-     console.log(stations);
+    console.log(stations);
+    console.log(nom_station);
+
     // parse the date / time
-    var parseTime = d3.timeParse("%H");
-        bisectDate = d3.bisector(function() {
-          var heure = 0;
-          while(heure <= 28)
+    var parseTime = d3.timeParse("%m/%d/%Y %H");
+        bisectDate = d3.bisector(function(d) {
+          for(var i = 1; i < d.length; i++)
           {
-            heure++;
+            if(d[i]["nom"] == nom_station)
+            {
+              for(var j = 0; j < d[i]["detailJour"].length; j++)
+              {
+                if(j == jour_station)
+                {
+                  for(var k = 0; k < d[i]["detailJour"][jour_station]["detailHoraire"].length; k++)
+                  {
+                    return d[i]["detailJour"][jour_station]["detailHoraire"][k].h;
+                  }
+                }
+              }
+            }
           }
-          heure_global = heure;
-          return heure;
         }).left;
 
     // set the ranges
@@ -485,12 +501,80 @@ function createDayLineChart() {
 
     // define the line
     var valueline = d3.line().curve(d3.curveCardinal)
-        .x(function(heure_global) { return x(heure_global); })
-        .y(function(d) { return y(d.p); });
+        .x(function(d) {
+          for(var i = 1; i < d.length; i++)
+          {
+            if(d[i]["nom"] == nom_station)
+            {
+              for(var j = 0; j < d[i]["detailJour"].length; j++)
+              {
+                if(j == jour_station)
+                {
+                  for(var k = 0; k < d[i]["detailJour"][jour_station]["detailHoraire"].length; k++)
+                  {
+                    return x(d[i]["detailJour"][jour_station]["detailHoraire"][k].h);
+                  }
+                }
+              }
+            }
+          }
+        })
+        .y(function(d) {
+          for(var i = 1; i < d.length; i++)
+          {
+            if(d[i]["nom"] == nom_station)
+            {
+              for(var j = 0; j < d[i]["detailJour"].length; j++)
+              {
+                if(j == jour_station)
+                {
+                  for(var k = 0; k < d[i]["detailJour"][jour_station]["detailHoraire"].length; k++)
+                  {
+                    return y(d[i]["detailJour"][jour_station]["detailHoraire"][k].p);
+                  }
+                }
+              }
+            }
+          }
+        });
     // define the line
     var valueline2 = d3.line().curve(d3.curveCardinal)
-        .x(function(heure_global) { return x(heure_global); })
-        .y(function(d) { return y1(d.t); });
+        .x(function(d) {
+          for(var i = 1; i < d.length; i++)
+          {
+            if(d[i]["nom"] == nom_station)
+            {
+              for(var j = 0; j < d[i]["detailJour"].length; j++)
+              {
+                if(j == jour_station)
+                {
+                  for(var k = 0; k < d[i]["detailJour"][jour_station]["detailHoraire"].length; k++)
+                  {
+                    return x(d[i]["detailJour"][jour_station]["detailHoraire"][k].h);
+                  }
+                }
+              }
+            }
+          }
+        })
+        .y(function(d) {
+          for(var i = 1; i < d.length; i++)
+          {
+            if(d[i]["nom"] == nom_station)
+            {
+              for(var j = 0; j < d[i]["detailJour"].length; j++)
+              {
+                if(j == jour_station)
+                {
+                  for(var k = 0; k < d[i]["detailJour"][jour_station]["detailHoraire"].length; k++)
+                  {
+                    return y1(d[i]["detailJour"][jour_station]["detailHoraire"][k].t);
+                  }
+                }
+              }
+            }
+          }
+        });
 
     // append the svg obgect to the body of the page
     // appends a 'group' element to 'svg'
@@ -502,23 +586,78 @@ function createDayLineChart() {
 
     for(var i = 1; i < stations.length; i++)
     {
-      for(var j = 0; j < stations[i]["detailJour"].length; j++)
+      if(stations[i]["nom"] == nom_station)
       {
-        for(var k = 0; k < stations[i]["detailJour"][j]["detailHoraire"].length; k++)
+        for(var j = 0; j < stations[i]["detailJour"].length; j++)
         {
-          stations[i]["detailJour"][j]["detailHoraire"][k].h = parseTime(stations[i]["detailJour"][j]["detailHoraire"][k].h);
-          stations[i]["detailJour"][j]["detailHoraire"][k].t = +(stations[i]["detailJour"][j]["detailHoraire"][k].t / 100);
-          stations[i]["detailJour"][j]["detailHoraire"][k].p = +(Math.round(stations[i]["detailJour"][j]["detailHoraire"][k].p * 10) / 10);
+          if(j == jour_station)
+          {
+            for(var k = 0; k < stations[i]["detailJour"][jour_station]["detailHoraire"].length; k++)
+            {
+              stations[i]["detailJour"][jour_station]["detailHoraire"][k].h = parseTime("2/" + jour_station + "/1999 " + stations[i]["detailJour"][jour_station]["detailHoraire"][k].h);
+              stations[i]["detailJour"][jour_station]["detailHoraire"][k].t = +(stations[i]["detailJour"][jour_station]["detailHoraire"][k].t / 100);
+              stations[i]["detailJour"][jour_station]["detailHoraire"][k].p = +(Math.round(stations[i]["detailJour"][jour_station]["detailHoraire"][k].p * 10) / 10);
+            }
+          }
         }
       }
     }
 
     // Scale the range of the data
-    /*x.domain(d3.extent(data, function(d) { return d.d; }));
-    y.domain([0, d3.max(data, function(d) {
-      return Math.max(d.p); })]);
-    y1.domain([0, d3.max(data, function(d) {
-      return Math.max(d.t); })]);
+    x.domain(d3.extent(stations, function(d) {
+      for(var i = 1; i < d.length; i++)
+      {
+        if(d[i]["nom"] == nom_station)
+        {
+          for(var j = 0; j < d[i]["detailJour"].length; j++)
+          {
+            if(j == jour_station)
+            {
+              for(var k = 0; k < d[i]["detailJour"][jour_station]["detailHoraire"].length; k++)
+              {
+                return d[i]["detailJour"][jour_station]["detailHoraire"][k].h;
+              }
+            }
+          }
+        }
+      }
+    }));
+    y.domain([0, d3.max(stations, function(d) {
+      for(var i = 1; i < d.length; i++)
+      {
+        if(d[i]["nom"] == nom_station)
+        {
+          for(var j = 0; j < d[i]["detailJour"].length; j++)
+          {
+            if(j == jour_station)
+            {
+              for(var k = 0; k < d[i]["detailJour"][jour_station]["detailHoraire"].length; k++)
+              {
+                return Math.max(d[i]["detailJour"][jour_station]["detailHoraire"][k].p);
+              }
+            }
+          }
+        }
+      }
+    })]);
+    y1.domain([0, d3.max(stations, function(d) {
+      for(var i = 1; i < d.length; i++)
+      {
+        if(d[i]["nom"] == nom_station)
+        {
+          for(var j = 0; j < d[i]["detailJour"].length; j++)
+          {
+            if(j == jour_station)
+            {
+              for(var k = 0; k < d[i]["detailJour"][jour_station]["detailHoraire"].length; k++)
+              {
+                return Math.max(d[i]["detailJour"][jour_station]["detailHoraire"][k].t);
+              }
+            }
+          }
+        }
+      }
+    })]);
 
     const transitionPath = d3
       .transition()
@@ -526,7 +665,7 @@ function createDayLineChart() {
       .duration(2500);
 
     var path_pluvio = svg.append("path")
-          .attr("d", valueline(data));
+          .attr("d", valueline(stations));
 
     var path_length = path_pluvio.node().getTotalLength();
 
@@ -538,7 +677,7 @@ function createDayLineChart() {
 
     var path_temp = svg.append("path")        // Add the valueline2 path.
         .style("stroke", "red")
-        .attr("d", valueline2(data));
+        .attr("d", valueline2(stations));
 
     path_length = path_temp.node().getTotalLength();
 
@@ -610,7 +749,7 @@ function createDayLineChart() {
             .attr("x", 106)
             .attr("y", 35);
 
-        svg.append("rect")
+        /*svg.append("rect")
             .attr("class", "overlay")
             .attr("width", width)
             .attr("height", height)
@@ -631,7 +770,7 @@ function createDayLineChart() {
                                                      .map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' '));
               focus_pluvio.select(".tooltip-pluvio").text(d.p + " mm");
               focus_pluvio.select(".tooltip-temp").text(d.t + " °C");
-            });
+            });*/
 
       // text label for the y axis
     svg.append("text")
@@ -666,5 +805,5 @@ function createDayLineChart() {
           .attr("text-anchor", "middle")
           .style("font-size", "16px")
           .style("text-decoration", "underline")
-          .text("Evolution des températures et de la pluviométrie moyenne sur février");*/
+          .text("Evolution des températures et de la pluviométrie à " + nom_station + " le " + jour_station + " février");
 }
