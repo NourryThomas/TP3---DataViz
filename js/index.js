@@ -460,7 +460,7 @@ var margin = {top: 20, right: 20, bottom: 30, left: 50},
 
 // parse the date / time
 var parseTime = d3.timeParse("%m/%d/%Y %H");
-    bisectDate = d3.bisector(function(d) { return d.h; }).left;
+    bisectDateJour = d3.bisector(function(d) { return d.h; }).left;
 
 // set the ranges
 var x = d3.scaleTime().range([0, width]);
@@ -602,7 +602,7 @@ var focus_pluvio = svg.append("g")
         .on("mouseout", function() { focus_pluvio.style("display", "none"); focus_temp.style("display", "none"); })
         .on("mousemove",function () {
           var x0 = x.invert(d3.mouse(this)[0]),
-              i = bisectDate(detailHoraires, x0, 1),
+              i = bisectDateJour(detailHoraires, x0, 1),
               d0 = detailHoraires[i - 1],
               d1 = detailHoraires[i],
               d = x0 - d0.h > d1.h - x0 ? d1 : d0;
