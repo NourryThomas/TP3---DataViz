@@ -33,6 +33,12 @@ div.tooltip {
     fill: none;
 }
 
+#day_line_chart > svg > g > path {
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
 .axis path,
 .axis line {
     fill: none;

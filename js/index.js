@@ -261,11 +261,11 @@ function createLineChart() {
   var yAxisRight = d3.axisRight(y1).ticks(5);
 
   // define the line
-  var valueline = d3.line().curve(d3.curveCardinal)
+  var valueline = d3.line().curve(d3.curveMonotoneX)
       .x(function(d) { return x(d.d); })
       .y(function(d) { return y(d.p); });
   // define the line
-  var valueline2 = d3.line().curve(d3.curveCardinal)
+  var valueline2 = d3.line().curve(d3.curveMonotoneX)
       .x(function(d) { return x(d.d); })
       .y(function(d) { return y1(d.t); });
 
@@ -474,11 +474,11 @@ var yAxisLeft = d3.axisLeft(y).ticks(5);
 var yAxisRight = d3.axisRight(y1).ticks(5);
 
 // define the line
-var valueline = d3.line().curve(d3.curveCardinal)
+var valueline = d3.line().curve(d3.curveMonotoneX)
     .x(function(d) { return x(d.h); })
     .y(function(d) { return y(d.p); });
 // define the line
-var valueline2 = d3.line().curve(d3.curveCardinal)
+var valueline2 = d3.line().curve(d3.curveMonotoneX)
     .x(function(d) { return x(d.h); })
     .y(function(d) { return y1(d.t); });
 
@@ -498,10 +498,8 @@ detailHoraires.forEach(function(d) {
 
 // Scale the range of the data
 x.domain(d3.extent(detailHoraires, function(d) { return d.h; }));
-y.domain([0, d3.max(detailHoraires, function(d) {
-  return Math.max(d.p); })]);
-y1.domain([0, d3.max(detailHoraires, function(d) {
-  return Math.max(d.t); })]);
+y.domain(d3.extent(detailHoraires, function(d) { return d.p; }));
+y1.domain(d3.extent(detailHoraires, function(d) { return d.t; }));
 
 const transitionPath = d3
   .transition()
@@ -637,7 +635,7 @@ svg.append("g")
   // text label for the y1 axis
 svg.append("text")
     .attr("transform", "rotate(-90)")
-    .attr("y", 0 + width + margin.right)
+    .attr("y", 5 + width + margin.right)
     .attr("x",0 - (height / 2))
     .attr("dy", "1em")
     .style("text-anchor", "middle")
