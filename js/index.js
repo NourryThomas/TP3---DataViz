@@ -1,7 +1,7 @@
 var data = [];
 var stations = [];
 var stationsName = [];
-const width = 750, height = 750;
+const width = 950, height = 950;
 
 const projection = d3.geoConicConformal()
   .center([2.454071, 46.279229])
@@ -30,7 +30,7 @@ function createMap() {
   const svg = d3.select('#map')
       .append("svg")
       .attr("id", "svg")
-      .attr("viewBox", "0 0 " + width * 1.05 + " " + height);
+      .attr("viewBox", "50 70 " + width  + " " + height * 0.77);
 
   const deps = svg.append("g");
 
