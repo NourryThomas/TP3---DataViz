@@ -276,7 +276,7 @@ function createLineChart() {
   data.forEach(function(d) {
     d.d = parseTime(d.d + "-Feb-99");
     d.t = +(d.t / 100);
-    d.p = +(Math.round( d.p * 10 ) / 10);
+    d.p = +(Math.round( d.p * 10 / (stations.length - 1)) / 10);
   });
 
   // Scale the range of the data
@@ -443,12 +443,4 @@ function createLineChart() {
     tab_date.push(jour + " " + mois);
     $(this).text(tab_date[occ]);
   });
-}
-
-function Maj_First_Lettre(str) {
-   var splitStr = str.toLowerCase().split(' ');
-   for (var i = 0; i < splitStr.length; i++) {
-       splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-   }
-   return splitStr.join(' ');
 }
