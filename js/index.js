@@ -491,11 +491,15 @@ var svg = d3.select("#day_line_chart").append("svg")
     .attr("transform","translate(" + margin.left + "," + margin.top + ")");
 
 detailHoraires.forEach(function(d) {
-  if(!(d.h instanceof Date))
+  if(d.h instanceof Date)
   {
+    d.t = +(d.t / 100);
+    d.p = +(Math.round(d.p * 10) / 10);
+  }
+  else {
     d.h = parseTime("2/" + day + "/1999 " + d.h);
     d.t = +(d.t / 100);
-    d.p = +(Math.round( d.p * 10 / (stations.length - 1)) / 10);
+    d.p = +(Math.round(d.p * 10) / 10);
   }
 });
 
