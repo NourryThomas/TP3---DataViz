@@ -53,6 +53,7 @@ function loadJson(d){
   createMap();
   createVilles();
   createLineChart();
+  //createDayLineChart();
 }
 
 function createStation(){
@@ -443,4 +444,224 @@ function createLineChart() {
     tab_date.push(jour + " " + mois);
     $(this).text(tab_date[occ]);
   });
+}
+
+function createDayLineChart() {
+
+      // set the dimensions and margins of the graph
+    var margin = {top: 20, right: 20, bottom: 30, left: 50},
+        width = 720 - margin.left - margin.right,
+        height = 375 - margin.top - margin.bottom,
+        tooltip = { width: 100, height: 100, x: 10, y: -30 },
+        options = {weekday: "long", month: "long", day: "2-digit"},
+        heure_global = 0;
+
+     console.log(stations);
+    // parse the date / time
+    var parseTime = d3.timeParse("%H");
+        bisectDate = d3.bisector(function() {
+          var heure = 0;
+          while(heure <= 28)
+          {
+            heure++;
+          }
+          heure_global = heure;
+          return heure;
+        }).left;
+
+    // set the ranges
+    var x = d3.scaleTime().range([0, width]);
+    var y = d3.scaleLinear().range([height, 0]);
+    var y1 = d3.scaleLinear().range([height, 0]);
+
+    var xAxis = d3.axisBottom(x).ticks(5);
+
+    var yAxisLeft = d3.axisLeft(y).ticks(5);
+
+    var yAxisRight = d3.axisRight(y1).ticks(5);
+
+    // define the line
+    var valueline = d3.line().curve(d3.curveCardinal)
+        .x(function(heure_global) { return x(heure_global); })
+        .y(function(d) { return y(d.p); });
+    // define the line
+    var valueline2 = d3.line().curve(d3.curveCardinal)
+        .x(function(heure_global) { return x(heure_global); })
+        .y(function(d) { return y1(d.t); });
+
+    // append the svg obgect to the body of the page
+    // appends a 'group' element to 'svg'
+    // moves the 'group' element to the top left margin
+    var svg = d3.select("#day_line_chart").append("svg")
+        .attr("viewBox", "0 0 " + width * 1.15 + " " + height  * 1.15)
+        .append("g")
+        .attr("transform","translate(" + margin.left + "," + margin.top + ")");
+
+    for(var i = 1; i < stations.length; i++)
+    {
+      for(var j = 0; j < stations[i]["detailJour"].length; j++)
+      {
+        for(var k = 0; k < stations[i]["detailJour"][j]["detailHoraire"].length; k++)
+        {
+          stations[i]["detailJour"][j]["detailHoraire"][k].h = parseTime(stations[i]["detailJour"][j]["detailHoraire"][k].h);
+          stations[i]["detailJour"][j]["detailHoraire"][k].t = +(stations[i]["detailJour"][j]["detailHoraire"][k].t / 100);
+          stations[i]["detailJour"][j]["detailHoraire"][k].p = +(Math.round(stations[i]["detailJour"][j]["detailHoraire"][k].p * 10) / 10);
+        }
+      }
+    }
+
+    // Scale the range of the data
+    /*x.domain(d3.extent(data, function(d) { return d.d; }));
+    y.domain([0, d3.max(data, function(d) {
+      return Math.max(d.p); })]);
+    y1.domain([0, d3.max(data, function(d) {
+      return Math.max(d.t); })]);
+
+    const transitionPath = d3
+      .transition()
+      .ease(d3.easeSin)
+      .duration(2500);
+
+    var path_pluvio = svg.append("path")
+          .attr("d", valueline(data));
+
+    var path_length = path_pluvio.node().getTotalLength();
+
+    d3.select("#day_line_chart > svg > g > path:first-child")
+        .attr("stroke-dasharray", path_length)
+        .attr("stroke-dashoffset", path_length)
+        .transition(transitionPath)
+        .attr("stroke-dashoffset", 0);
+
+    var path_temp = svg.append("path")        // Add the valueline2 path.
+        .style("stroke", "red")
+        .attr("d", valueline2(data));
+
+    path_length = path_temp.node().getTotalLength();
+
+    d3.select("#line_chart > svg > g > path:last-child")
+        .attr("stroke-dasharray", path_length)
+        .attr("stroke-dashoffset", path_length)
+        .transition(transitionPath)
+        .attr("stroke-dashoffset", 0);
+
+    svg.append("g")            // Add the X Axis
+        .attr("class", "x axis")
+        .attr("id", "x_axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .attr("id", "y_axis")
+        .style("fill", "steelblue")
+        .call(yAxisLeft);
+
+    var focus_temp =  svg.append("g")
+              .attr("class", "focus")
+              .style("display", "none");
+
+    focus_temp.append("circle")
+              .attr("class", "circle_temp")
+              .attr("r", 5);
+
+    var focus_pluvio = svg.append("g")
+              .attr("class", "focus")
+              .style("display", "none");
+
+        focus_pluvio.append("circle")
+                  .attr("class", "circle_pluvio")
+                  .attr("r", 5);
+
+        focus_pluvio.append("rect")
+            .attr("class", "tooltip_graph")
+            .attr("width", 162)
+            .attr("height", 68)
+            .attr("x", 10)
+            .attr("y", -22)
+            .attr("rx", 4)
+            .attr("ry", 4);
+
+        focus_pluvio.append("text")
+            .attr("class", "tooltip-date")
+            .attr("x", 18)
+            .attr("y", -2);
+
+        focus_pluvio.append("text")
+            .attr("x", 18)
+            .attr("y", 18)
+            .text("Pluviométrie :");
+
+        focus_pluvio.append("text")
+            .attr("class", "tooltip-pluvio")
+            .attr("x", 106)
+            .attr("y", 18);
+
+        focus_pluvio.append("text")
+            .attr("x", 18)
+            .attr("y", 35)
+            .text("Température :");
+
+        focus_pluvio.append("text")
+            .attr("class", "tooltip-temp")
+            .attr("x", 106)
+            .attr("y", 35);
+
+        svg.append("rect")
+            .attr("class", "overlay")
+            .attr("width", width)
+            .attr("height", height)
+            .on("mouseover", function() { focus_pluvio.style("display", null); focus_temp.style("display", null);  })
+            .on("mouseout", function() { focus_pluvio.style("display", "none"); focus_temp.style("display", "none"); })
+            .on("mousemove",function () {
+              var x0 = x.invert(d3.mouse(this)[0]),
+                  i = bisectDate(data, x0, 1),
+                  d0 = data[i - 1],
+                  d1 = data[i],
+                  d = x0 - d0.d > d1.d - x0 ? d1 : d0;
+              focus_pluvio.attr("transform", "translate(" + x(d.d) + "," + y(d.p) + ")");
+              focus_temp.attr("transform", "translate(" + x(d.d) + "," + y1(d.t) + ")");
+              focus_pluvio.select(".tooltip-date").text(Date.parse(d.d)
+                                                     .toLocaleDateString("fr-FR",options)
+                                                     .toLowerCase()
+                                                     .split(' ')
+                                                     .map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' '));
+              focus_pluvio.select(".tooltip-pluvio").text(d.p + " mm");
+              focus_pluvio.select(".tooltip-temp").text(d.t + " °C");
+            });
+
+      // text label for the y axis
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .style('fill', 'steelblue')
+        .text("Pluviométrie (mm)");
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .attr("id", "y1_axis")
+        .attr("transform", "translate(" + width + " ,0)")
+        .style("fill", "red")
+        .call(yAxisRight);
+
+      // text label for the y1 axis
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 + width + margin.right)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .style('fill', 'red')
+        .text("Température (°C)");
+
+    svg.append("text")
+          .attr("x", (width / 2))
+          .attr("y", 2 - (margin.top / 2))
+          .attr("text-anchor", "middle")
+          .style("font-size", "16px")
+          .style("text-decoration", "underline")
+          .text("Evolution des températures et de la pluviométrie moyenne sur février");*/
 }
