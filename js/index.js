@@ -204,9 +204,9 @@ function createVilles() {
                .duration(200)
                .style("opacity", .9);
            div.html("<div class='nomVille'>" + d.nom+" </div>"
-           + "Précipitations : " + d.detailJour[day - 1]['preMoye'] + "mm</br>"
-           + "Minimum : " + d.detailJour[day - 1]['min'] + "°C</br>"
-           + "Maximum : " + d.detailJour[day - 1]['max'] + "°C</br>")
+           + "Précipitations : " + d.detailJour[day - 1]['preMoye'] + " mm</br>"
+           + "Minimum : " + d.detailJour[day - 1]['min'] + " °C</br>"
+           + "Maximum : " + d.detailJour[day - 1]['max'] + " °C</br>")
                .style("left", (d3.event.pageX - 10) + "px")
                .style("top", (d3.event.pageY - 10) + "px");
        })
@@ -240,10 +240,13 @@ function createLineChart() {
     // set the dimensions and margins of the graph
   var margin = {top: 20, right: 20, bottom: 30, left: 50},
       width = 720 - margin.left - margin.right,
-      height = 375 - margin.top - margin.bottom;
+      height = 375 - margin.top - margin.bottom,
+      tooltip = { width: 100, height: 100, x: 10, y: -30 },
+      options = {weekday: "long", month: "long", day: "2-digit"};
 
   // parse the date / time
   var parseTime = d3.timeParse("%d-%b-%y");
+      bisectDate = d3.bisector(function(d) { return d.d; }).left;
 
   // set the ranges
   var x = d3.scaleTime().range([0, width]);
@@ -276,7 +279,7 @@ function createLineChart() {
   data.forEach(function(d) {
     d.d = parseTime(d.d + "-Feb-99");
     d.t = +(d.t / 100);
-    d.p = +(Math.round( d.p * 10 ) / 10);
+    d.p = +(Math.round( d.p * 10 / (stations.length - 1)) / 10);
   });
 
   // Scale the range of the data
@@ -325,6 +328,79 @@ function createLineChart() {
       .attr("id", "y_axis")
       .style("fill", "steelblue")
       .call(yAxisLeft);
+
+  var focus_temp =  svg.append("g")
+            .attr("class", "focus")
+            .style("display", "none");
+
+  focus_temp.append("circle")
+            .attr("class", "circle_temp")
+            .attr("r", 5);
+
+  var focus_pluvio = svg.append("g")
+            .attr("class", "focus")
+            .style("display", "none");
+
+      focus_pluvio.append("circle")
+                .attr("class", "circle_pluvio")
+                .attr("r", 5);
+
+      focus_pluvio.append("rect")
+          .attr("class", "tooltip_graph")
+          .attr("width", 162)
+          .attr("height", 68)
+          .attr("x", 10)
+          .attr("y", -22)
+          .attr("rx", 4)
+          .attr("ry", 4);
+
+      focus_pluvio.append("text")
+          .attr("class", "tooltip-date")
+          .attr("x", 18)
+          .attr("y", -2);
+
+      focus_pluvio.append("text")
+          .attr("x", 18)
+          .attr("y", 18)
+          .text("Pluviométrie :");
+
+      focus_pluvio.append("text")
+          .attr("class", "tooltip-pluvio")
+          .attr("x", 106)
+          .attr("y", 18);
+
+      focus_pluvio.append("text")
+          .attr("x", 18)
+          .attr("y", 35)
+          .text("Température :");
+
+      focus_pluvio.append("text")
+          .attr("class", "tooltip-temp")
+          .attr("x", 106)
+          .attr("y", 35);
+
+      svg.append("rect")
+          .attr("class", "overlay")
+          .attr("width", width)
+          .attr("height", height)
+          .on("mouseover", function() { focus_pluvio.style("display", null); focus_temp.style("display", null);  })
+          .on("mouseout", function() { focus_pluvio.style("display", "none"); focus_temp.style("display", "none"); })
+          .on("mousemove",function () {
+            var x0 = x.invert(d3.mouse(this)[0]),
+                i = bisectDate(data, x0, 1),
+                d0 = data[i - 1],
+                d1 = data[i],
+                d = x0 - d0.d > d1.d - x0 ? d1 : d0;
+            focus_pluvio.attr("transform", "translate(" + x(d.d) + "," + y(d.p) + ")");
+            focus_temp.attr("transform", "translate(" + x(d.d) + "," + y1(d.t) + ")");
+            focus_pluvio.select(".tooltip-date").text(Date.parse(d.d)
+                                                   .toLocaleDateString("fr-FR",options)
+                                                   .toLowerCase()
+                                                   .split(' ')
+                                                   .map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' '));
+            focus_pluvio.select(".tooltip-pluvio").text(d.p + " mm");
+            focus_pluvio.select(".tooltip-temp").text(d.t + " °C");
+          });
 
     // text label for the y axis
   svg.append("text")

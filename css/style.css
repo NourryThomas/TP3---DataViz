@@ -41,6 +41,32 @@ div.tooltip {
     shape-rendering: crispEdges;
 }
 
+.overlay {
+    fill: none;
+    pointer-events: all;
+}
+
+.focus .circle_pluvio {
+    fill: steelblue;
+}
+
+.focus .circle_temp {
+    fill: red;
+}
+
+.focus text {
+    font-size: 14px;
+}
+
+.tooltip_graph {
+    fill: white;
+    stroke: #000;
+}
+
+.tooltip-date, .tooltip-pluvio, .tooltip-temp {
+    font-weight: bold;
+}
+
 #map{
   width:50%
 }
