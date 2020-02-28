@@ -217,6 +217,7 @@ function createVilles() {
                .style("top", "-500px");
        })
        .on("click", function(d) {
+         $('#day_line_chart').empty();
          createDayLineChart(d.detailJour[day].detailHoraire, d.nom, day);
        });
 
@@ -449,15 +450,236 @@ function createLineChart() {
 }
 
 function createDayLineChart(detailHoraires, nomStation, day) {
-  console.log(detailHoraires);
-  console.log(nomStation);
-  console.log(day);
 
-  /*svg.append("text")
+  // set the dimensions and margins of the graph
+var margin = {top: 20, right: 20, bottom: 30, left: 50},
+    width = 720 - margin.left - margin.right,
+    height = 375 - margin.top - margin.bottom,
+    tooltip = { width: 100, height: 100, x: 10, y: -30 },
+    options = {hour:"2-digit", minute:"2-digit"};
+
+// parse the date / time
+var parseTime = d3.timeParse("%m/%d/%Y %H");
+    bisectDate = d3.bisector(function(d) { return d.h; }).left;
+
+// set the ranges
+var x = d3.scaleTime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+var y1 = d3.scaleLinear().range([height, 0]);
+
+var xAxis = d3.axisBottom(x).ticks(5);
+
+var yAxisLeft = d3.axisLeft(y).ticks(5);
+
+var yAxisRight = d3.axisRight(y1).ticks(5);
+
+// define the line
+var valueline = d3.line().curve(d3.curveCardinal)
+    .x(function(d) { return x(d.h); })
+    .y(function(d) { return y(d.p); });
+// define the line
+var valueline2 = d3.line().curve(d3.curveCardinal)
+    .x(function(d) { return x(d.h); })
+    .y(function(d) { return y1(d.t); });
+
+// append the svg obgect to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("#day_line_chart").append("svg")
+    .attr("viewBox", "0 0 " + width * 1.15 + " " + height  * 1.15)
+    .append("g")
+    .attr("transform","translate(" + margin.left + "," + margin.top + ")");
+
+detailHoraires.forEach(function(d) {
+  d.h = parseTime("2/" + day + "/1999 " + d.h);
+  console.log(d.h);
+  d.t = +(d.t / 100);
+  d.p = +(Math.round( d.p * 10 / (stations.length - 1)) / 10);
+});
+
+// Scale the range of the data
+x.domain(d3.extent(detailHoraires, function(d) { return d.h; }));
+y.domain([0, d3.max(detailHoraires, function(d) {
+  return Math.max(d.p); })]);
+y1.domain([0, d3.max(detailHoraires, function(d) {
+  return Math.max(d.t); })]);
+
+const transitionPath = d3
+  .transition()
+  .ease(d3.easeSin)
+  .duration(2500);
+
+var path_pluvio = svg.append("path")
+      .attr("d", valueline(detailHoraires));
+
+var path_length = path_pluvio.node().getTotalLength();
+
+d3.select("#day_line_chart > svg > g > path:first-child")
+    .attr("stroke-dasharray", path_length)
+    .attr("stroke-dashoffset", path_length)
+    .transition(transitionPath)
+    .attr("stroke-dashoffset", 0);
+
+var path_temp = svg.append("path")        // Add the valueline2 path.
+    .style("stroke", "red")
+    .attr("d", valueline2(detailHoraires));
+
+path_length = path_temp.node().getTotalLength();
+
+d3.select("#day_line_chart > svg > g > path:last-child")
+    .attr("stroke-dasharray", path_length)
+    .attr("stroke-dashoffset", path_length)
+    .transition(transitionPath)
+    .attr("stroke-dashoffset", 0);
+
+svg.append("g")            // Add the X Axis
+    .attr("class", "x axis")
+    .attr("id", "day_x_axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+svg.append("g")
+    .attr("class", "y axis")
+    .attr("id", "day_y_axis")
+    .style("fill", "steelblue")
+    .call(yAxisLeft);
+
+var focus_temp =  svg.append("g")
+          .attr("class", "focus")
+          .style("display", "none");
+
+focus_temp.append("circle")
+          .attr("class", "circle_temp")
+          .attr("r", 5);
+
+var focus_pluvio = svg.append("g")
+          .attr("class", "focus")
+          .style("display", "none");
+
+    focus_pluvio.append("circle")
+              .attr("class", "circle_pluvio")
+              .attr("r", 5);
+
+    focus_pluvio.append("rect")
+        .attr("class", "tooltip_graph")
+        .attr("width", 162)
+        .attr("height", 68)
+        .attr("x", 10)
+        .attr("y", -22)
+        .attr("rx", 4)
+        .attr("ry", 4);
+
+    focus_pluvio.append("text")
+        .attr("class", "tooltip-date")
+        .attr("x", 18)
+        .attr("y", -2);
+
+    focus_pluvio.append("text")
+        .attr("x", 18)
+        .attr("y", 18)
+        .text("Pluviométrie :");
+
+    focus_pluvio.append("text")
+        .attr("class", "tooltip-pluvio")
+        .attr("x", 106)
+        .attr("y", 18);
+
+    focus_pluvio.append("text")
+        .attr("x", 18)
+        .attr("y", 35)
+        .text("Température :");
+
+    focus_pluvio.append("text")
+        .attr("class", "tooltip-temp")
+        .attr("x", 106)
+        .attr("y", 35);
+
+    svg.append("rect")
+        .attr("class", "overlay")
+        .attr("width", width)
+        .attr("height", height)
+        .on("mouseover", function() { focus_pluvio.style("display", null); focus_temp.style("display", null);  })
+        .on("mouseout", function() { focus_pluvio.style("display", "none"); focus_temp.style("display", "none"); })
+        .on("mousemove",function () {
+          var x0 = x.invert(d3.mouse(this)[0]),
+              i = bisectDate(detailHoraires, x0, 1),
+              d0 = detailHoraires[i - 1],
+              d1 = detailHoraires[i],
+              d = x0 - d0.h > d1.h - x0 ? d1 : d0;
+          focus_pluvio.attr("transform", "translate(" + x(d.h) + "," + y(d.p) + ")");
+          focus_temp.attr("transform", "translate(" + x(d.h) + "," + y1(d.t) + ")");
+          focus_pluvio.select(".tooltip-date").text(Date.parse(d.h)
+                                                 .toLocaleDateString("fr-FR",options)
+                                                 .toLowerCase()
+                                                 .split(' ')
+                                                 .map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ')
+                                                 .substring(11));
+          focus_pluvio.select(".tooltip-pluvio").text(d.p + " mm");
+          focus_pluvio.select(".tooltip-temp").text(d.t + " °C");
+        });
+
+  // text label for the y axis
+svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left)
+    .attr("x",0 - (height / 2))
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .style('fill', 'steelblue')
+    .text("Pluviométrie (mm)");
+
+svg.append("g")
+    .attr("class", "y axis")
+    .attr("id", "day_y1_axis")
+    .attr("transform", "translate(" + width + " ,0)")
+    .style("fill", "red")
+    .call(yAxisRight);
+
+  // text label for the y1 axis
+svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 + width + margin.right)
+    .attr("x",0 - (height / 2))
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .style('fill', 'red')
+    .text("Température (°C)");
+
+  svg.append("text")
         .attr("x", (width / 2))
         .attr("y", 2 - (margin.top / 2))
         .attr("text-anchor", "middle")
         .style("font-size", "16px")
         .style("text-decoration", "underline")
-        .text("Evolution des températures et de la pluviométrie à " + nomStation + " le " + day + " février");*/
+        .text("Evolution des températures et de la pluviométrie à " + nomStation + " le " + day + " février");
+
+  $('#day_x_axis > g > text').each(function(occ) {
+    var x_axis_label = $(this).text();
+    if(occ == 0)
+    {
+      x_axis_label = "00:00";
+    }
+    else if(occ == 1){
+      x_axis_label = "03:00";
+    }
+    else if(occ == 2){
+      x_axis_label = "06:00";
+    }
+    else if(occ == 3){
+      x_axis_label = "09:00";
+    }
+    else if(occ == 4){
+      x_axis_label = "12:00";
+    }
+    else if(occ == 5){
+      x_axis_label = "15:00";
+    }
+    else if (occ == 6) {
+      x_axis_label = "18:00";
+    }
+    else if(occ == 7) {
+      x_axis_label = "21:00";
+    }
+    $(this).text(x_axis_label);
+  });
 }
