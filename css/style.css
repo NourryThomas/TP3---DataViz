@@ -88,10 +88,14 @@ div.tooltip {
     float:left;
     width:50%;
   }
-}
-
-@media (min-width: 992px) {
+  #container_graphique{
+    padding-left:5%;
+  }
   #line_chart, #day_line_chart{
     width:75%;
   }
+}
+
+@media (min-width: 992px) {
+
 }
