@@ -89,3 +89,9 @@ div.tooltip {
     width:50%;
   }
 }
+
+@media (min-width: 992px) {
+  #line_chart, #day_line_chart{
+    width:75%;
+  }
+}
